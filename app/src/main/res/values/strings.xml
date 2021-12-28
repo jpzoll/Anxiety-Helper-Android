@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">projectbluebook</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_worksheet_title">Create Worksheet</string>
+
+    <!-- TODO Icons/Pages -->
+    <!-- bottom nav bar -->
+    <string name="home">Home</string>
+    <string name="fears">Fears</string>
+    <string name="resources">Resources</string>
+    <!-- top action bar -->
+    <string name="profile">Profile</string>
+    <string name="about">What Is This App?</string>
+    <string name="settings">Settings</string>
+
+    <!-- TODO: Worksheet Questions -->
+    <string name="question1">What thoughts are you having?</string>
+    <string name="question2">Where do you feel anxiety in the body?</string>
+    <string name="question3">What can I do to face fear instead of avoiding it?</string>
+    <string name="question4">How did the event go? What happened?</string>
+    <string name="question5">How am I feeling now compared to how I felt before?</string>
+    <string name="question6">What did I learn from the experience?</string>
+
+    <string name="postEventTitle">Post Event</string>
+    <string name="saveBtn">Save</string>
+
+    <!-- TODO other -->
+    <string name="worksheetItem_title">Worksheet Title</string>
+    <string name="worksheetItem_date">-??-??-??-</string>
+
+    <!-- TODO Fears Page -->
+    <string name="addNewFear">Add new fear to face!</string>
+    <string name="add">Add</string>
+
+    <!-- TODO About Page -->
+    <string name="aboutTheApp">
+        Welcome to your very own fear and anxiety journal app!
+        This app is designed for you to help you SKILLFULLY express your fears before and after exposure to them.
+        On the home page, you will find the ability to create a new worksheet. By clicking the button and answering questions, you are able to save the worksheet and returning back to it upon exposing yourself for another "post-event" reflection.
+    </string>
+    <string name="title_activity_maps">MapsActivity</string>
+
+</resources>
