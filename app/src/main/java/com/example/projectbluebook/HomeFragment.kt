@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.DateFormat
 import java.util.*
@@ -91,10 +94,15 @@ class HomeFragment : Fragment(), WorksheetAdapter.OnWorksheetClickListener {
         // Load Home Fragment
         val createFragment = CreateWorksheetFragment()
         btn_create.setOnClickListener {
-            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.mainFrameLayout, createFragment)
-            //transaction.addToBackStack(null)
-            transaction.commit()
+
+
+            val action = HomeFragmentDirections.actionHomeFragmentToCreateWorksheetFragment(null)
+            findNavController().navigate(action)
+
+//            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+//            transaction.replace(R.id.mainFrameLayout, createFragment)
+//            //transaction.addToBackStack(null)
+//            transaction.commit()
         }
     }
 
@@ -121,13 +129,17 @@ class HomeFragment : Fragment(), WorksheetAdapter.OnWorksheetClickListener {
     override fun onWorksheetClick(position: Int) {
         // Get worksheet from the SQL database to show detail of
         val wsList = sqliteHelper.getAllWorksheets()
-        val w = wsList[position]
+        val w = wsList[position] as Worksheet
         // Pass worksheet into detail fragment
-        val worksheetDetailFragment = CreateWorksheetFragment.newInstance(w)
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.mainFrameLayout, worksheetDetailFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+//        val worksheetDetailFragment = CreateWorksheetFragment.newInstance(w)
+//        val transaction = parentFragmentManager.beginTransaction()
+//        transaction.replace(R.id.mainFrameLayout, worksheetDetailFragment)
+//        transaction.addToBackStack(null)
+//        transaction.commit()
+
+        // Navigate back to Home Fragment
+        val action = HomeFragmentDirections.actionHomeFragmentToCreateWorksheetFragment(w)
+        findNavController().navigate(action)
     }
 
     override fun onWorksheetClickDelete(position: Int) {

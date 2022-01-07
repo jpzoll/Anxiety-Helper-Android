@@ -17,6 +17,8 @@ import java.io.Serializable
 import java.text.DateFormat
 import java.util.*
 import android.app.Activity.RESULT_OK
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,6 +31,10 @@ private const val ARG_PARAM1 = "param1"
  */
 class CreateWorksheetFragment : Fragment() {
     // TODO: Rename and change types of parameters
+
+    // Arguments from SafeArgs Plugin
+    private val args: CreateWorksheetFragmentArgs by navArgs()
+
     private var param1: Serializable? = null
 
     private lateinit var sqliteHelper: SQLiteHelper
@@ -57,17 +63,16 @@ class CreateWorksheetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        if (param1 is Worksheet) {
-            setTextFields(param1)
+        // Decide if we are CREATING or UPDATING a worksheet
+        if (args.worksheet is Worksheet) {
+            // Set Q&A Edit Text Fields to data retrieved from clicking on the worksheet in Home Fragment
+            setTextFields(args.worksheet)
             // Worksheet Submission (Update / Create New)
             btn_submit.setOnClickListener {
-                println("updating")
-                updateWorksheet(param1 as Worksheet)
+                updateWorksheet(args.worksheet as Worksheet)
             }
         } else {
             btn_submit.setOnClickListener {
-                println("submitting")
                 submitWorksheet()
             }
         }
@@ -144,10 +149,14 @@ class CreateWorksheetFragment : Fragment() {
             }
             // Sending off
 
-            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-            parentFragmentManager.popBackStack()
-            transaction.replace(R.id.mainFrameLayout, HomeFragment(), "Home Fragment")
-            transaction.commit()
+//            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+//            parentFragmentManager.popBackStack()
+//            transaction.replace(R.id.mainFrameLayout, HomeFragment(), "Home Fragment")
+//            transaction.commit()
+
+            // Navigating back to Home Fragment
+            val action = CreateWorksheetFragmentDirections.actionCreateWorksheetFragmentToHomeFragment()
+            findNavController().navigate(action)
         }
     }
 
@@ -177,10 +186,14 @@ class CreateWorksheetFragment : Fragment() {
             println("Update record failed.")
         }
 
-        val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-        parentFragmentManager.popBackStack()
-        transaction.replace(R.id.mainFrameLayout, HomeFragment(), "Home Fragment")
-        transaction.commit()
+//        val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+//        parentFragmentManager.popBackStack()
+//        transaction.replace(R.id.mainFrameLayout, HomeFragment(), "Home Fragment")
+//        transaction.commit()
+
+        // Navigating back to Home Fragment
+        val action = CreateWorksheetFragmentDirections.actionCreateWorksheetFragmentToHomeFragment()
+        findNavController().navigate(action)
     }
 
 

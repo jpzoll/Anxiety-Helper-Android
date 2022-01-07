@@ -1,6 +1,7 @@
 package com.example.projectbluebook
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,12 +10,18 @@ import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,14 +41,32 @@ class MainActivity : AppCompatActivity(), WorksheetAdapter.OnWorksheetClickListe
     // Adapter
     //private val adapter = WorksheetAdapter(wsList.reversed(), this)
 
+    // Navigation Component
+    private lateinit var navController: NavController
+    // App Bar Config for Bottom Navigation
+    private lateinit var bottomAppBarConfiguration: AppBarConfiguration
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //Action Bar
-        supportActionBar!!.title = "Project Bluebook"
+        // Navigation Component
+        val fragmentContainer = supportFragmentManager.findFragmentById(R.id.mainFrameLayout) as NavHostFragment
+        navController = fragmentContainer.findNavController()
+
+        // Bottom Nav Bar Functionality
+        nav_menu.setupWithNavController(navController)
+        bottomAppBarConfiguration = AppBarConfiguration(
+            setOf(R.id.homeFragment, R.id.fearsFragment)
+        )
+
+        // Action Bar
+        setSupportActionBar(toolbar)
+        setupActionBarWithNavController(navController, bottomAppBarConfiguration)
+
+        //supportActionBar!!.title = "Project Bluebook"
 
         // Import Potential Data from CreateWorkSheetActivity
         //var w: Worksheet
@@ -71,40 +96,35 @@ class MainActivity : AppCompatActivity(), WorksheetAdapter.OnWorksheetClickListe
 
         }
 
-        // Bottom Nav Bar Functionality
-        val homeFragment = HomeFragment()
-        val fearsFragment = FearsFragment()
-        val resourcesFragment = ResourcesFragment()
-        // Initially, we start at the home screen / fragment
-        setCurrentFragment(homeFragment)
 
-        nav_menu.setOnItemSelectedListener {
-            when(it.itemId) {
-                R.id.i_home -> setCurrentFragment(homeFragment)
-                R.id.i_fears -> setCurrentFragment(fearsFragment)
-                R.id.i_resources -> {
-                    //setCurrentFragment(resourcesFragment)
-                    val builder = AlertDialog.Builder(this)
-                    builder.setMessage("What type of resource are you interested in?")
-                    builder.setCancelable(true)
-                    builder.setNegativeButton("YouTube Video") {dialog, _ ->
-                        Intent(this, YouTubeActivity::class.java).also {
-                            startActivity(it)
-                        }
-                        dialog.dismiss()
-                    }
-                    builder.setPositiveButton("Therapy Search") {dialog, _ ->
-                        Intent(this, MapsActivity::class.java).also {
-                            startActivity(it)
-                        }
-                        dialog.dismiss()
-                    }
-                    val alert = builder.create()
-                    alert.show()
-                }
-            }
-            true
-        }
+
+//        nav_menu.setOnItemSelectedListener {
+//            when(it.itemId) {
+//                R.id.homeFragment -> println("Home.") //setCurrentFragment(homeFragment)
+//                R.id.fearsFragment -> println("Fears.") //setCurrentFragment(fearsFragment)
+//                R.id.i_resources -> {
+//                    //setCurrentFragment(resourcesFragment)
+//                    val builder = AlertDialog.Builder(this)
+//                    builder.setMessage("What type of resource are you interested in?")
+//                    builder.setCancelable(true)
+//                    builder.setNegativeButton("YouTube Video") {dialog, _ ->
+//                        Intent(this, YouTubeActivity::class.java).also {
+//                            startActivity(it)
+//                        }
+//                        dialog.dismiss()
+//                    }
+//                    builder.setPositiveButton("Therapy Search") {dialog, _ ->
+//                        Intent(this, MapsActivity::class.java).also {
+//                            startActivity(it)
+//                        }
+//                        dialog.dismiss()
+//                    }
+//                    val alert = builder.create()
+//                    alert.show()
+//                }
+//            }
+//            true
+//        }
 
 
     }
@@ -177,37 +197,18 @@ class MainActivity : AppCompatActivity(), WorksheetAdapter.OnWorksheetClickListe
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        
         when (item.itemId) {
             R.id.i_profile -> {
-                supportFragmentManager.beginTransaction()
-                    .add(R.id.mainFrameLayout, ProfileFragment(), "Profile Fragment")
-                    .addToBackStack(null)
-                    .commit()
+                val action = GraphNavDirections.actionGlobalProfileFragment()
+                navController.navigate(action)
+                return true
             }
-            R.id.i_about -> {
-                supportFragmentManager.beginTransaction()
-                    .add(R.id.mainFrameLayout, AboutFragment(), "About Fragment")
-                    .addToBackStack(null)
-                    .commit()
-            }
-            R.id.i_settings -> Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show()
         }
-        //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        return true
-    }
-
-    private fun onSupportNavigateUpd(): Boolean {
-        onBackPressed()
-        Toast.makeText(this, "onSupportNavigateUp", Toast.LENGTH_SHORT).show()
-        println("onSupportNavigateUp")
-        return true
+        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        supportFragmentManager.popBackStack()
-        println("onSupport.......................")
-        return super.onSupportNavigateUp()
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
 
